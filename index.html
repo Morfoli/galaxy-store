@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nebula Shop | Premium Cosmic Store</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="galaxy-bg" id="galaxyBg">
+    <div class="stars" id="starsLayer1"></div>
+    <div class="stars2" id="starsLayer2"></div>
+    <div class="stars3" id="starsLayer3"></div>
+    <div class="nebula" id="nebulaLayer"></div>
+    <canvas class="interactive-stars" id="interactiveStars"></canvas>
+    <div class="shooting-star"></div>
+    <div class="aurora"></div>
+  </div>
+
+  <header class="header">
+    <a href="#" class="logo" data-view="store">
+      <span class="logo-icon">✦</span>
+      <h1>Nebula Shop</h1>
+      <span class="logo-subtitle">Cosmic Collection</span>
+    </a>
+    <nav class="nav">
+      <a href="#" class="nav-link active" data-view="store">Store</a>
+      <a href="#" class="nav-link" data-view="cart">Cart <span class="cart-count" id="cartCount">0</span></a>
+      <a href="#" class="nav-link" data-view="orders">Orders</a>
+      <button class="admin-btn" id="adminBtn">Admin</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <!-- Store View -->
+    <section id="storeView" class="view active">
+      <div class="hero">
+        <h2 class="hero-title">Discover the <span class="gradient-text">Universe</span></h2>
+        <p class="hero-subtitle">Curated cosmic treasures from across the galaxy</p>
+      </div>
+      <div class="store-toolbar">
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="searchInput" placeholder="Search products...">
+        </div>
+        <div class="filter-group">
+          <label>Category:</label>
+          <select id="categoryFilter">
+            <option value="">All</option>
+          </select>
+        </div>
+      </div>
+      <div class="products-grid" id="productsGrid"></div>
+      <div class="no-results" id="noResults" style="display:none">No products match your search.</div>
+    </section>
+
+    <!-- Cart View -->
+    <section id="cartView" class="view">
+      <div class="cart-header">
+        <h2>Your Cosmic Cart</h2>
+        <button class="btn-ghost" id="backToStore">← Back to Store</button>
+      </div>
+      <div class="cart-content">
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="cartSubtotal">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span id="cartShipping">$0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span id="cartTotal">$0.00</span>
+          </div>
+          <button class="btn-primary btn-checkout" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Checkout View -->
+    <section id="checkoutView" class="view">
+      <div class="checkout-header">
+        <button class="btn-ghost" id="backToCart">← Back to Cart</button>
+        <div class="checkout-steps">
+          <span class="step active" data-step="1">Shipping</span>
+          <span class="step-line"></span>
+          <span class="step" data-step="2">Payment</span>
+          <span class="step-line"></span>
+          <span class="step" data-step="3">Confirm</span>
+        </div>
+      </div>
+      <div class="checkout-content">
+        <div class="checkout-step-content active" id="checkoutStep1">
+          <h3>Shipping Information</h3>
+          <form id="shippingForm" class="checkout-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="shipFirstName" required>
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="shipLastName" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="shipEmail" required>
+            </div>
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" id="shipAddress" required placeholder="Street address">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="shipCity" required>
+              </div>
+              <div class="form-group">
+                <label>Postal Code</label>
+                <input type="text" id="shipPostal" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <input type="text" id="shipCountry" required value="United States">
+            </div>
+            <button type="submit" class="btn-primary">Continue to Payment</button>
+          </form>
+        </div>
+        <div class="checkout-step-content" id="checkoutStep2">
+          <h3>Payment Information</h3>
+          <form id="paymentForm" class="checkout-form">
+            <div class="form-group">
+              <label>Card Number</label>
+              <input type="text" id="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry</label>
+                <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="cardCvv" placeholder="123" maxlength="4" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Name on Card</label>
+              <input type="text" id="cardName" required>
+            </div>
+            <p class="secure-note">🔒 Secured demo checkout. No real charges.</p>
+            <button type="submit" class="btn-primary">Continue to Review</button>
+          </form>
+        </div>
+        <div class="checkout-step-content" id="checkoutStep3">
+          <h3>Order Summary</h3>
+          <div class="order-review">
+            <div class="review-shipping">
+              <h4>Shipping to</h4>
+              <p id="reviewAddress"></p>
+            </div>
+            <div class="review-items" id="reviewItems"></div>
+            <div class="review-total">
+              <span>Order Total</span>
+              <span id="reviewTotal">$0.00</span>
+            </div>
+          </div>
+          <button class="btn-primary btn-place-order" id="placeOrderBtn">Place Order</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Order Confirmation View -->
+    <section id="confirmView" class="view">
+      <div class="confirmation-card cosmic-card">
+        <div class="confirm-icon">✓</div>
+        <h2>Order Confirmed</h2>
+        <p class="order-number">Order #<span id="orderNumber"></span></p>
+        <p class="confirm-message">Thank you for your purchase. A confirmation has been sent to your email.</p>
+        <button class="btn-primary" id="continueShoppingBtn">Continue Shopping</button>
+      </div>
+    </section>
+
+    <!-- Orders History View -->
+    <section id="ordersView" class="view">
+      <div class="orders-header">
+        <h2>Order History</h2>
+        <button class="btn-ghost" id="backToStoreFromOrders">← Back to Store</button>
+      </div>
+      <div class="orders-list" id="ordersList"></div>
+      <div class="orders-empty" id="ordersEmpty" style="display:none">
+        <p>No orders yet. Start shopping!</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-col">
+        <h4>Nebula Shop</h4>
+        <p>Premium cosmic artifacts and interstellar collectibles.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Customer Service</h4>
+        <a href="#">Shipping Info</a>
+        <a href="#">Returns & Refunds</a>
+        <a href="#">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p>support@nebulashop.cosmos</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Nebula Shop. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Product Detail Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content product-detail cosmic-card">
+      <button class="modal-close" id="closeProductModal">&times;</button>
+      <div class="product-detail-content" id="productDetailContent"></div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content cosmic-card">
+      <button class="modal-close" id="closeLogin">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="adminUser" required placeholder="admin">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="adminPass" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-primary">Enter Admin Panel</button>
+        <p class="form-hint">Default: admin / nebula123</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content admin-panel cosmic-card">
+      <button class="modal-close" id="closeAdmin">&times;</button>
+      <h2>Admin Panel</h2>
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="products">Products</button>
+        <button class="tab-btn" data-tab="add">Add Product</button>
+        <button class="tab-btn" data-tab="orders-admin">Orders</button>
+        <button class="tab-btn" data-tab="settings">Settings</button>
+      </div>
+      <div class="admin-content">
+        <div class="tab-content active" id="productsTab">
+          <div class="admin-products-list" id="adminProductsList"></div>
+        </div>
+        <div class="tab-content" id="addTab">
+          <form id="addProductForm" class="admin-form">
+            <div class="form-group">
+              <label>Product Name</label>
+              <input type="text" id="productName" required>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="productDesc" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Price ($)</label>
+                <input type="number" id="productPrice" step="0.01" required>
+              </div>
+              <div class="form-group">
+                <label>Image URL</label>
+                <input type="url" id="productImage" placeholder="https://...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <input type="text" id="productCategory" placeholder="e.g. Crystals, Artifacts">
+            </div>
+            <button type="submit" class="btn-primary">Add Product</button>
+          </form>
+        </div>
+        <div class="tab-content" id="ordersAdminTab">
+          <div class="admin-orders-list" id="adminOrdersList"></div>
+        </div>
+        <div class="tab-content" id="settingsTab">
+          <form id="changePasswordForm" class="admin-form">
+            <div class="form-group">
+              <label>New Admin Password</label>
+              <input type="password" id="newPassword" required>
+            </div>
+            <button type="submit" class="btn-primary">Update Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div class="modal" id="editModal">
+    <div class="modal-content cosmic-card">
+      <button class="modal-close" id="closeEdit">&times;</button>
+      <h2>Edit Product</h2>
+      <form id="editProductForm">
+        <input type="hidden" id="editProductId">
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="editProductName" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="editProductDesc" rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input type="number" id="editProductPrice" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="url" id="editProductImage">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" id="editProductCategory">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Save Changes</button>
+          <button type="button" class="btn-danger" id="deleteProductBtn">Delete Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
